@@ -45,11 +45,12 @@ function Send-SlackMessage {
 function Update-SlackMessage {
     param(
         [string]$Text,
-        [string]$Ts
+        [string]$Ts,
+        [string]$ChannelId
     )
     
     $Body = @{
-        channel = $script:SlackChannel
+        channel = $ChannelId
         text    = $Text
         ts      = $Ts
     }
