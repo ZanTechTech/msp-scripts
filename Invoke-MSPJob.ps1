@@ -94,14 +94,17 @@ function Invoke-MSPJob {
             foreach ($Line in $OutputLines) {
                 $AllLines += $Line
 
-                # Convention mode: only post [LOG] lines
+                # Convention mode: only post [LOG] and [WARN] lines
                 if ($Config.outputMode -eq "convention") {
-                    if ($Line -match "^$$LOG$$") {
-                        $CleanLine = $Line -replace "^$$LOG$$\s*", ""
+                    $logPattern = '^$$LOG$$'
+                    $warnPattern = '^$$WARN$$'
+
+                    if ($Line -match $logPattern) {
+                        $CleanLine = $Line -replace '^$$LOG$$\s*', ''
                         $SlackLines += $CleanLine
                     }
-                    if ($Line -match "^$$WARN$$") {
-                        $CleanLine = $Line -replace "^$$WARN$$\s*", ""
+                    if ($Line -match $warnPattern) {
+                        $CleanLine = $Line -replace '^$$WARN$$\s*', ''
                         $SlackLines += ":warning: $CleanLine"
                         $ScriptStatus = "warned"
                     }
