@@ -1,7 +1,7 @@
 {
     "deploy-scheduled-tasks": {
         "path": "scripts/deploy-scheduled-tasks.ps1",
-        "outputMode": "all",
+        "outputMode": "convention",
         "bigOutput": "full",
         "timeout": 120,
         "context": "system-ok",
