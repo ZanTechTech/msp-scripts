@@ -6,10 +6,7 @@
         "timeout": 120,
         "context": "system-ok",
         "description": "Deploy Task Scheduler tasks from GitHub task sets"
-    }
-}
-{
-    "deploy-scheduled-tasks": { ... },
+    },
     "kill-windows-nags": {
         "path": "scripts/kill-windows-nags.ps1",
         "outputMode": "convention",
