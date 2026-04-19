@@ -2,7 +2,7 @@
     "deploy-scheduled-tasks": {
         "path": "scripts/deploy-scheduled-tasks.ps1",
         "outputMode": "convention",
-        "bigOutput": "summary",
+        "bigOutput": "full",
         "timeout": 120,
         "context": "system-ok",
         "description": "Deploy Task Scheduler tasks from GitHub task sets"
