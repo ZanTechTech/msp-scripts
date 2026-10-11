@@ -1,0 +1,89 @@
+# opsboard relay config. Copy to /etc/opsboard/config.yaml.
+# Any string may contain ${ENV_VAR}; values come from /etc/opsboard/env (loaded by systemd).
+board_name: "Acme MSP Ops"
+host: 0.0.0.0
+port: 8080
+poll_interval: 30            # default seconds between polls (each block may override)
+# token: "..."              # prefer BOARD_TOKEN in /etc/opsboard/env
+
+# Optional: where /api/ask forwards transcripts. POST {text, source}; reply JSON {reply: "..."} or plain text.
+# ask_webhook_url: "http://127.0.0.1:9000/ask"
+# ask_webhook_token: "${ASK_TOKEN}"
+
+# ---------------- Blue Iris (JSON API, creds never reach the browser) ----------------
+# blueiris:
+#   url: "http://192.168.1.50:81"
+#   user: "${BI_USER}"
+#   password: "${BI_PASS}"
+#   poll_interval: 30
+
+# ---------------- Uptime Kuma (public status page polling) ----------------
+# kuma:
+#   url: "https://status.example.com"
+#   status_page_slug: "msp"
+#   poll_interval: 30
+#   headers:                      # optional, e.g. Cloudflare Access service token
+#     CF-Access-Client-Id: "${CF_ACCESS_CLIENT_ID}"
+#     CF-Access-Client-Secret: "${CF_ACCESS_CLIENT_SECRET}"
+# Also: point a Kuma "Webhook" notification at http://<relay>:8080/api/webhook/kuma?token=<BOARD_TOKEN>
+
+# ---------------- Shelly Cloud ----------------
+# shelly:
+#   server: "https://shelly-55-eu.shelly.cloud"    # from Shelly app > User settings > Authorization cloud key
+#   auth_key: "${SHELLY_AUTH_KEY}"
+#   poll_interval: 30
+#   devices:
+#     - id: "a4cf12f4e8b2"
+#       name: "Shop Lights"
+#       tile: shelly_shop_lights       # tile id buttons can bind to
+#       channel: 0
+
+# ---------------- Generic HTTP probes ----------------
+# probes:
+#   - name: "Client Portal"
+#     url: "https://portal.example.com/health"
+#     expect: 200
+#   - name: "Office NAS"
+#     url: "http://192.168.1.20:5000"
+#     expect: 200
+
+# ---------------- Actions (HTTP request templates run by the relay) ----------------
+actions:
+  cam_front_preset_1:
+    method: GET
+    url: "http://192.168.1.50:81/cam/front/pos=101"      # BI PTZ preset 1 (pos=100+n)
+    headers: {Authorization: "Basic ${BI_BASIC}"}
+  kuma_pause_acme:
+    method: POST
+    url: "http://127.0.0.1:9000/kuma/pause"              # your own helper endpoint / MCP bridge
+    headers: {Authorization: "Bearer ${HELPER_TOKEN}"}
+    json: {tag: "ACME", minutes: 60}
+  shelly_shop_lights_toggle:
+    method: POST
+    url: "https://shelly-55-eu.shelly.cloud/device/relay/control"
+    data: {auth_key: "${SHELLY_AUTH_KEY}", id: "a4cf12f4e8b2", channel: 0, turn: "toggle"}
+    toggle_tile: shelly_shop_lights
+  # Any action may set `demo: true` to just return success without a request.
+
+# ---------------- Button decks (tabs on the right of the board) ----------------
+decks:
+  - name: Morning
+    buttons:
+      - label: Front Door Cam
+        action: cam_front_preset_1
+        icon: 📷
+        confirm: false
+      - label: "Pause Kuma: ACME"
+        action: kuma_pause_acme
+        icon: ⏸
+        confirm: true          # hold-to-confirm 1.5s
+      - label: Shop Lights
+        action: shelly_shop_lights_toggle
+        icon: 💡
+        tile: shelly_shop_lights   # button shows that tile's state/colour
+  - name: Evening
+    buttons:
+      - label: Shop Lights
+        action: shelly_shop_lights_toggle
+        icon: 💡
+        tile: shelly_shop_lights

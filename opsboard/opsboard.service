@@ -1,0 +1,22 @@
+[Unit]
+Description=opsboard relay (status board + button deck)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=board
+Group=board
+WorkingDirectory=/opt/opsboard
+EnvironmentFile=/etc/opsboard/env
+ExecStart=/opt/opsboard/venv/bin/python -m relay --config /etc/opsboard/config.yaml
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadOnlyPaths=/etc/opsboard
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ops Board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0f14">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<div id="unlock" class="overlay">
+  <div class="unlock-box">
+    <div class="unlock-icon">🔊</div>
+    <div class="unlock-title">Tap to enable sound</div>
+    <div class="unlock-sub">Safari needs one tap before the board can speak or beep.</div>
+  </div>
+</div>
+
+<header>
+  <div class="hdr-left"><span id="conn" class="dot red" title="disconnected"></span><span id="boardname">Ops Board</span></div>
+  <div class="hdr-right"><span id="summary"></span><span id="clock">--:--</span></div>
+</header>
+
+<main>
+  <section id="tiles-wrap">
+    <div id="cards"></div>
+    <div id="tiles"></div>
+  </section>
+  <aside id="deck">
+    <div id="deck-tabs"></div>
+    <div id="deck-buttons"></div>
+    <div id="deck-footer">
+      <button id="ptt" class="ptt hidden">🎤<span>Hold to talk</span></button>
+      <button id="snd" class="snd" title="sound">🔈</button>
+    </div>
+  </aside>
+</main>
+
+<div id="modal" class="overlay hidden">
+  <div class="modal-box">
+    <div class="modal-head"><span id="modal-title"></span><button id="modal-close">✕</button></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+<div id="toast" class="hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>
